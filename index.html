@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>T.R.A.D.E.R. OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#071018;--bg2:#0d1721;--bg3:#12202d;--bg4:#182837;
+  --panel:#0f1b26;--panel2:#132230;
+  --border:#203243;--border2:#2b4256;
+  --txt:#d7e5f2;--txt2:#9eb3c5;--txt3:#678095;
+  --acc:#35e0a1;--acc2:#1ebf85;--acc-dim:rgba(53,224,161,.12);
+  --bull:#35e0a1;--bear:#ff6a7e;--neutral:#ffb84d;--info:#66b7ff;
+  --bull-dim:rgba(53,224,161,.12);--bear-dim:rgba(255,106,126,.12);--neutral-dim:rgba(255,184,77,.12);--info-dim:rgba(102,183,255,.12);
+  --font-mono:'DM Mono',monospace;--font-display:'Syne',sans-serif;
+  --r:5px;--r2:10px;--r3:18px;
+  --shadow:0 0 0 1px rgba(255,255,255,.02),0 16px 50px rgba(0,0,0,.35);
+  --t:180ms ease;
+}
+[data-theme="light"]{
+  --bg:#edf3f8;--bg2:#f7fafc;--bg3:#ffffff;--bg4:#eff4f8;
+  --panel:#ffffff;--panel2:#f7fafc;
+  --border:#d5dee7;--border2:#becad6;
+  --txt:#152331;--txt2:#53687c;--txt3:#7e92a5;
+  --acc:#058b61;--acc2:#036b49;--acc-dim:rgba(5,139,97,.08);
+  --bull:#058b61;--bear:#c6384f;--neutral:#b06b00;--info:#2d7fe3;
+  --bull-dim:rgba(5,139,97,.1);--bear-dim:rgba(198,56,79,.1);--neutral-dim:rgba(176,107,0,.1);--info-dim:rgba(45,127,227,.1);
+  --shadow:0 0 0 1px rgba(21,35,49,.04),0 12px 32px rgba(15,23,42,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:none}
+body{
+  font-family:var(--font-mono);
+  font-size:13px;
+  line-height:1.6;
+  color:var(--txt);
+  background:
+    radial-gradient(circle at top left, rgba(53,224,161,.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(102,183,255,.08), transparent 24%),
+    linear-gradient(180deg,var(--bg),#05090d 140%);
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.015),rgba(255,255,255,0)),
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.018) 3px,rgba(255,255,255,.018) 4px);
+  pointer-events:none;
+  z-index:999;
+  opacity:.7;
+}
+a{color:inherit;text-decoration:none}
+button{border:none;background:none;color:inherit;font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+img,svg{display:block}
+:focus-visible{outline:1px solid var(--acc);outline-offset:2px}
+
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100dvh}
+.sidebar{
+  position:sticky;top:0;height:100dvh;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 20%),var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.main{min-width:0;padding:28px 30px 96px}
+
+.sidebar-top{padding:22px 16px 16px;border-bottom:1px solid var(--border)}
+.brand-mark{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.logo-box{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc-dim),rgba(102,183,255,.08));
+  border:1px solid rgba(53,224,161,.3);
+  box-shadow:0 0 0 1px rgba(255,255,255,.02),0 8px 24px rgba(0,0,0,.25);
+}
+.logo-box svg{width:18px;height:18px;stroke:var(--acc)}
+.brand-name{font-family:var(--font-display);font-size:16px;font-weight:800;letter-spacing:.06em}
+.brand-sub{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em}
+.sys-status{display:flex;gap:8px;align-items:center;font-size:10px;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.nav{flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav a{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:var(--r);
+  color:var(--txt3);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid transparent;transition:all var(--t);
+}
+.nav a:hover{color:var(--txt);background:var(--bg3);border-color:var(--border)}
+.nav a.active{color:var(--acc);background:var(--acc-dim);border-color:rgba(53,224,161,.22)}
+.nav-num{font-size:9px;opacity:.55;min-width:16px}
+
+.sidebar-bottom{padding:14px 16px;border-top:1px solid var(--border);display:grid;gap:10px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;font-size:10px}
+.stat-row .slabel{color:var(--txt3);text-transform:uppercase;letter-spacing:.08em}
+.stat-row .sval{font-weight:500;color:var(--txt)}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
+  margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.page-tag{font-size:9px;color:var(--txt3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px}
+.breadcrumb{font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:.01em}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:999px;
+  border:1px solid var(--border2);background:rgba(255,255,255,.02);
+  color:var(--txt2);font-size:11px;letter-spacing:.05em;
+  transition:all var(--t);white-space:nowrap;
+}
+.btn:hover{background:var(--bg4);border-color:var(--border2);color:var(--txt)}
+.btn-acc{background:var(--acc-dim);border-color:rgba(53,224,161,.28);color:var(--acc)}
+.btn-acc:hover{background:var(--acc);border-color:var(--acc);color:#08110d}
+.btn-danger{background:var(--bear-dim);border-color:rgba(255,106,126,.28);color:var(--bear)}
+.btn-danger:hover{background:var(--bear);border-color:var(--bear);color:#fff}
+
+.section{margin-bottom:34px}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.section-title{font-family:var(--font-display);font-size:18px;font-weight:700}
+.section-desc{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 22%),var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r3);
+  box-shadow:var(--shadow);
+}
+.card-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 16px;border-bottom:1px solid var(--border)}
+.card-title{font-family:var(--font-display);font-size:13px;font-weight:700}
+.card-sub{font-size:10px;color:var(--txt3);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+.card-body{padding:16px}
+
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:999px;
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;
+}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%}
+.badge-bull{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(53,224,161,.22)}
+.badge-bull::before{background:var(--bull)}
+.badge-bear{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,106,126,.22)}
+.badge-bear::before{background:var(--bear)}
+.badge-neutral{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,184,77,.22)}
+.badge-neutral::before{background:var(--neutral)}
+.badge-info{background:var(--info-dim);color:var(--info);border:1px solid rgba(102,183,255,.22)}
+.badge-info::before{background:var(--info)}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g-hero{display:grid;grid-template-columns:1.35fr .95fr;gap:16px;align-items:start}
+
+.hero-shell{
+  position:relative;overflow:hidden;
+}
+.hero-shell::after{
+  content:'';
+  position:absolute;inset:auto -10% -20% auto;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(53,224,161,.16),transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:9px;color:var(--acc);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:var(--font-display);font-size:clamp(26px,3vw,40px);line-height:1.02;font-weight:800;max-width:12ch;margin-bottom:10px}
+.hero-desc{font-size:12px;color:var(--txt2);max-width:58ch;line-height:1.75;margin-bottom:22px}
+
+.stat-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+}
+.stat-cell{padding:13px 14px;background:var(--bg3)}
+.sc-label{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.sc-val{font-family:var(--font-display);font-size:17px;font-weight:700}
+
+.score-track{
+  height:6px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:14px;
+  border:1px solid var(--border);
+}
+.score-fill{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--bear),var(--neutral),var(--acc));
+  transition:width 400ms cubic-bezier(.16,1,.3,1);
+}
+.hero-foot{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-top:14px;color:var(--txt3);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+}
+.readiness-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.principle-box{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent),var(--bg3);
+  border:1px solid var(--border2);border-radius:16px;padding:16px;
+}
+.principle-label{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.principle-text{font-family:var(--font-display);font-size:17px;font-weight:700;line-height:1.35;color:var(--txt)}
+
+.state-btns{display:flex;gap:6px;flex-wrap:wrap}
+.state-btn{
+  padding:7px 14px;border-radius:999px;border:1px solid var(--border2);
+  background:var(--bg3);color:var(--txt3);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  transition:all var(--t)
+}
+.state-btn:hover{color:var(--txt)}
+.state-btn.active-bull{background:var(--bull-dim);border-color:rgba(53,224,161,.32);color:var(--bull)}
+.state-btn.active-bear{background:var(--bear-dim);border-color:rgba(255,106,126,.32);color:var(--bear)}
+.state-btn.active-neutral{background:var(--neutral-dim);border-color:rgba(255,184,77,.32);color:var(--neutral)}
+
+.deck-grid,.legend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.deck-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform var(--t),border-color var(--t)}
+.deck-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.deck-head{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.deck-name{font-family:var(--font-display);font-size:14px;font-weight:700}
+.deck-list{list-style:none;counter-reset:dc}
+.deck-list li{
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  font-size:11.5px;color:var(--txt2);line-height:1.55;display:flex;gap:10px;counter-increment:dc;
+}
+.deck-list li:last-child{border-bottom:none}
+.deck-list li::before{content:counter(dc,decimal-leading-zero);font-size:9px;color:var(--txt3);min-width:18px;padding-top:3px}
+
+.gate-list{display:grid;gap:8px}
+.gate-item{
+  display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:14px;
+  background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all var(--t)
+}
+.gate-item:has(input:checked){background:var(--acc-dim);border-color:rgba(53,224,161,.24)}
+.gate-item input{margin-top:4px;width:14px;height:14px;accent-color:var(--acc)}
+.gate-letter{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--acc);min-width:86px}
+.gate-desc{font-size:11px;color:var(--txt3);line-height:1.6;margin-top:2px}
+
+.reminder-list{display:grid;gap:7px}
+.reminder-item{
+  padding:11px 14px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);
+  display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:var(--txt2)
+}
+.reminder-idx{font-size:9px;color:var(--txt3);letter-spacing:.06em;flex-shrink:0}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:grid;gap:5px}
+.field label{font-size:10px;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase}
+.field input,.field select,.field textarea,.search-input{
+  width:100%;padding:9px 10px;border-radius:12px;border:1px solid var(--border2);
+  background:var(--bg3);color:var(--txt);font-size:12px;transition:border-color var(--t),background var(--t)
+}
+.field textarea{min-height:96px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus,.search-input:focus{border-color:var(--acc);outline:none}
+.field-full{grid-column:1/-1}
+
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.metric-box{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:11px 12px;text-align:center}
+.metric-val{font-family:var(--font-display);font-size:20px;font-weight:700}
+.metric-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-top:3px}
+.big-score{font-family:var(--font-display);font-size:clamp(52px,8vw,78px);font-weight:800;line-height:.9}
+.score-card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+
+.journal-log{display:grid;gap:8px}
+.log-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.log-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.log-asset{font-family:var(--font-display);font-size:14px;font-weight:700}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag{padding:2px 7px;border-radius:999px;font-size:9px;background:var(--bg4);color:var(--txt3);letter-spacing:.06em;border:1px solid var(--border)}
+.log-notes{font-size:11px;color:var(--txt3);line-height:1.6}
+
+.never-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.never-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px 16px;
+  display:grid;gap:8px;transition:transform var(--t),border-color var(--t)
+}
+.never-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.never-num{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--txt3);line-height:1}
+.never-text{font-size:11.5px;color:var(--txt2);line-height:1.65}
+.never-tags{display:flex;gap:4px;flex-wrap:wrap}
+.ntp{padding:2px 7px;border-radius:999px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.nt-sizing{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(53,224,161,.2)}
+.nt-emotion{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,106,126,.2)}
+.nt-discipline{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,184,77,.2)}
+.nt-risk{background:var(--info-dim);color:var(--info);border:1px solid rgba(102,183,255,.2)}
+
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filter-btn{
+  padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);
+  color:var(--txt3);font-size:10px;letter-spacing:.06em;text-transform:uppercase;transition:all var(--t)
+}
+.filter-btn:hover{color:var(--txt)}
+.filter-btn.active{background:var(--acc-dim);border-color:rgba(53,224,161,.28);color:var(--acc)}
+.search-input{width:170px}
+
+.footer-line{
+  margin-top:18px;padding:18px 0 0;border-top:1px solid var(--border);
+  text-align:center;font-size:10px;color:var(--txt3);letter-spacing:.06em
+}
+.mob-nav{display:none}
+.empty-state{text-align:center;padding:42px;color:var(--txt3);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+
+.panel-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.mini-panel{
+  border:1px solid var(--border);border-radius:14px;background:var(--bg3);padding:12px;
+}
+.mini-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:5px}
+.mini-value{font-family:var(--font-display);font-size:18px;font-weight:700}
+.inline-note{font-size:10px;color:var(--txt3);line-height:1.6}
+.status-banner{
+  margin-top:12px;padding:11px 12px;border-radius:14px;border:1px solid var(--border);
+  background:var(--bg3);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;
+}
+.status-banner.is-locked{background:var(--bear-dim);border-color:rgba(255,106,126,.28)}
+.status-banner.is-clear{background:var(--bull-dim);border-color:rgba(53,224,161,.28)}
+
+@media (max-width:1120px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:16px 16px 100px}
+  .g2,.g3,.g-hero,.deck-grid,.legend-grid,.panel-grid,.metrics-row,.form-grid,.stat-strip{grid-template-columns:1fr}
+  .mob-nav{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:4px;
+    padding:6px;background:rgba(13,23,33,.88);backdrop-filter:blur(12px);
+    border:1px solid var(--border);border-radius:999px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.32)
+  }
+  .mob-nav a{padding:8px 12px;border-radius:999px;font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+  .mob-nav a.active{background:var(--acc-dim);color:var(--acc)}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-mark">
+        <div class="logo-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 18L9 13L12.2 16.2L20 8.4"/><path d="M15.5 8.4H20V12.9"/><path d="M6.5 6.5V18" opacity=".5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">T.R.A.D.E.R.</div>
+          <div class="brand-sub">Trading OS v3.0</div>
+        </div>
+      </div>
+      <div class="sys-status">
+        <span class="pulse"></span>
+        <span id="systemStatusText">System active</span>
+        <span id="liveclock" style="margin-left:auto"></span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#dashboard" class="active"><span class="nav-num">01</span>Dashboard</a>
+      <a href="#commandments"><span class="nav-num">02</span>30 계명</a>
+      <a href="#gate"><span class="nav-num">03</span>Pre-Trade Gate</a>
+      <a href="#journal"><span class="nav-num">04</span>Rule Journal</a>
+      <a href="#neverdos"><span class="nav-num">05</span>52 Never-Dos</a>
+      <a href="#legends"><span class="nav-num">06</span>Masters</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="stat-row"><span class="slabel">Rule Score</span><span class="sval" id="sb-score">0/100</span></div>
+      <div class="stat-row"><span class="slabel">Gate</span><span class="sval" id="sb-gate">0/6</span></div>
+      <div class="stat-row"><span class="slabel">Journal</span><span class="sval" id="sb-journal">0 entries</span></div>
+      <div class="stat-row"><span class="slabel">Streak</span><span class="sval" id="sb-streak">0</span></div>
+      <div style="padding-top:8px;border-top:1px solid var(--border)">
+        <div style="font-size:9px;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Hard Stop</div>
+        <div style="font-size:10px;color:var(--txt2)">연속 손실 3회 또는 감정 점수 4 이하가 반복되면 즉시 거래 중지</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-tag">Trading Operating System · Discipline First</div>
+        <div class="breadcrumb">T.R.A.D.E.R. OS</div>
+      </div>
+      <div class="top-actions">
+        <button class="btn" data-theme-toggle>◑ 테마</button>
+        <button class="btn" id="exportJournalBtn">⇩ 저널 내보내기</button>
+        <button class="btn" id="resetSessionBtn">⌦ 세션 초기화</button>
+        <button class="btn btn-acc" id="shufflePrinciple">↻ 원칙 새로고침</button>
+      </div>
+    </div>
+
+    <section class="section" id="dashboard">
+      <div class="g-hero">
+        <div class="card hero-shell">
+          <div class="card-body" style="padding:22px 24px">
+            <div class="hero-eyebrow">Trading operating system · Risk before reward</div>
+            <h2 class="hero-title">거래보다 먼저, 원칙이 열려야 한다.</h2>
+            <p class="hero-desc">이 시스템은 종목 추천이 아니라 행동 제어판입니다. 시장 상태를 먼저 정의하고, 프리트레이드 게이트를 통과한 뒤, 실행을 저널에 기록해 규칙 중심으로 움직입니다.</p>
+
+            <div class="stat-strip">
+              <div class="stat-cell">
+                <div class="sc-label">Market Mode</div>
+                <div class="sc-val" id="marketModeText">Neutral</div>
+              </div>
+              <div class="stat-cell">
+                <div class="sc-label">Trade Mode</div>
+                <div class="sc-val" id="tradeModeText">Selective</div>
+              </div>
+              <div class="stat-cell">
+                <div class="sc-label">Rule Score</div>
+                <div class="sc-val"><span id="ruleScore">0</span>/100</div>
+              </div>
+              <div class="stat-cell">
+                <div class="sc-label">Readiness</div>
+                <div class="sc-val" id="readinessText">Standby</div>
+              </div>
+            </div>
+
+            <div class="score-track"><span class="score-fill" id="scoreBar"></span></div>
+
+            <div class="hero-foot">
+              <span>Session readiness</span>
+              <span id="heroFootStatus"><span class="readiness-dot" style="background:var(--neutral)"></span> Watchlist only</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">오늘의 상태 판정</div>
+              <div class="card-sub">시장 상태를 먼저 정의한 뒤 행동을 맞춘다</div>
+            </div>
+            <div id="stateBadge" class="badge badge-neutral">Neutral</div>
+          </div>
+          <div class="card-body" style="display:grid;gap:12px">
+            <div class="state-btns">
+              <button class="state-btn" data-state="bull">강세장</button>
+              <button class="state-btn" data-state="bear">약세장</button>
+              <button class="state-btn" data-state="neutral">중립/관망</button>
+            </div>
+
+            <div class="principle-box">
+              <div class="principle-label">Today's Principle</div>
+              <div class="principle-text" id="heroPrinciple">애매하면 패스한다. 돈을 벌 기회는 다시 온다.</div>
+            </div>
+
+            <div class="mini-grid">
+              <div class="mini-panel">
+                <div class="mini-label">Gate Progress</div>
+                <div class="mini-value" id="gateSummary">0 / 6</div>
+              </div>
+              <div class="mini-panel">
+                <div class="mini-label">Hard Stop</div>
+                <div class="mini-value" id="hardStopState">OFF</div>
+              </div>
+            </div>
+
+            <div class="status-banner is-clear" id="statusBanner">
+              <span id="statusBannerText">현재 세션은 감시 상태입니다. 체크리스트를 통과하면 진입 준비로 전환됩니다.</span>
+              <span class="badge badge-info" id="sessionModeBadge">Standby</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="commandments">
+      <div class="section-header">
+        <div>
+          <div class="section-title">30 계명</div>
+          <div class="section-desc">강세장 · 약세장 · 절대 원칙</div>
+        </div>
+      </div>
+      <div class="deck-grid" id="commandmentDecks"></div>
+    </section>
+
+    <section class="section" id="gate">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Pre-Trade Gate</div>
+          <div class="section-desc">Time · Risk · Analysis · Discipline · Emotion · Reward</div>
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">6-Point Checklist</div>
+              <div class="card-sub">모두 통과해야 실전 모드 진입</div>
+            </div>
+            <div class="badge badge-info" id="gateBadge">Locked</div>
+          </div>
+          <div class="card-body">
+            <div class="gate-list" id="checklist"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">세션 리마인더</div>
+              <div class="card-sub">시장 상태별 강조 원칙</div>
+            </div>
+          </div>
+          <div class="card-body" style="display:grid;gap:12px">
+            <div class="reminder-list" id="reminders"></div>
+            <div class="inline-note">Hard Stop이 켜지면 체크리스트와 상태 버튼이 잠기고, 저널 기록만 이어집니다.</div>
+            <button class="btn btn-danger" id="hardStopBtn" style="width:100%;justify-content:center">⬛ 오늘 거래 중지 선언</button>
+            <button class="btn" id="resumeSessionBtn" style="width:100%;justify-content:center">↺ 세션 재개</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="journal">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Rule Journal</div>
+          <div class="section-desc">수익보다 규칙 준수 점수 — 위반 수익은 실패다</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">New Entry</div>
+              <div class="card-sub">실행보다 기록이 먼저 시스템을 만든다</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="journalForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label>티커 / 자산</label>
+                  <input required name="asset" placeholder="BTC, NVDA, 005930" />
+                </div>
+                <div class="field">
+                  <label>시장 상태</label>
+                  <select name="regime">
+                    <option value="강세장">강세장</option>
+                    <option value="약세장">약세장</option>
+                    <option value="중립/관망">중립/관망</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>결과</label>
+                  <select name="outcome">
+                    <option value="수익">수익</option>
+                    <option value="손실">손실</option>
+                    <option value="무거래">무거래</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>감정 점수 1–10</label>
+                  <input required type="number" min="1" max="10" name="emotion" value="7" />
+                </div>
+                <div class="field">
+                  <label>원칙 준수율 0–100</label>
+                  <input required type="number" min="0" max="100" name="discipline" value="80" />
+                </div>
+                <div class="field">
+                  <label>R 기대값</label>
+                  <input name="rr" placeholder="2.5R" />
+                </div>
+                <div class="field field-full">
+                  <label>메모</label>
+                  <textarea name="notes" placeholder="왜 진입했는지, 무엇을 놓쳤는지, 감정이 개입했는지 적으세요."></textarea>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                <button class="btn btn-acc" type="submit">↗ 저널 저장</button>
+                <button class="btn" type="button" id="seedExample">+ 예시 추가</button>
+                <button class="btn" type="button" id="clearJournalBtn">✕ 저널 비우기</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div>
+          <div class="score-card" style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px">
+              <div>
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:4px">Rule Discipline Index</div>
+                <div class="big-score" id="disciplineIndex">0</div>
+              </div>
+              <div class="badge badge-bull" id="disciplineBadge">양호 · 규칙 우선</div>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric-box"><div class="metric-val" id="entriesCount">0</div><div class="metric-label">저널 수</div></div>
+              <div class="metric-box"><div class="metric-val" id="avgEmotion">0</div><div class="metric-label">평균 감정</div></div>
+              <div class="metric-box"><div class="metric-val" id="avgDiscipline">0</div><div class="metric-label">평균 준수율</div></div>
+              <div class="metric-box"><div class="metric-val" id="lossStreak">0</div><div class="metric-label">연속 손실</div></div>
+            </div>
+          </div>
+
+          <div class="journal-log" id="journalLog"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="neverdos">
+      <div class="section-header">
+        <div>
+          <div class="section-title">52 Never-Dos</div>
+          <div class="section-desc">트레이더가 반드시 피해야 할 52가지</div>
+        </div>
+        <div class="filter-bar">
+          <input class="search-input" id="neverSearch" type="search" placeholder="검색..." aria-label="검색" />
+          <button class="filter-btn active" data-filter="all">전체</button>
+          <button class="filter-btn" data-filter="sizing">포지션</button>
+          <button class="filter-btn" data-filter="emotion">감정</button>
+          <button class="filter-btn" data-filter="discipline">규율</button>
+          <button class="filter-btn" data-filter="risk">리스크</button>
+        </div>
+      </div>
+      <div class="never-grid" id="neverGrid"></div>
+      <div id="neverEmpty" class="empty-state" style="display:none">검색 결과가 없습니다</div>
+    </section>
+
+    <section class="section" id="legends">
+      <div class="section-header">
+        <div>
+          <div class="section-title">세 거장의 압축 계명</div>
+          <div class="section-desc">Druckenmiller · Howard Marks · Charlie Munger</div>
+        </div>
+      </div>
+      <div class="legend-grid" id="legendDecks"></div>
+    </section>
+
+    <div class="footer-line">Flow: 시장 상태 선택 → 30계명 확인 → Gate 통과 → 실행/무거래 기록 → Hard Stop 판단</div>
+  </main>
+</div>
+
+<nav class="mob-nav">
+  <a href="#dashboard" class="active">Dashboard</a>
+  <a href="#commandments">계명</a>
+  <a href="#gate">Gate</a>
+  <a href="#journal">Journal</a>
+  <a href="#neverdos">Never-Do</a>
+</nav>
+
+<script>
+const STORAGE_KEY = 'trader-os-v3';
+
+const stateMeta = {
+  bull:{
+    label:'Bull',marketMode:'Bull',tradeMode:'Aggressive but ruled',badgeClass:'badge-bull',
+    principle:'추세를 따르되, 포지션 크기는 계획을 넘지 않는다.',
+    reminders:[
+      '승자를 보유하되, 출구 규칙은 진입 전부터 적어 둔다.',
+      '수익이 났다고 기준 이하 셋업을 거래하지 않는다.',
+      '강세장일수록 저품질 추격 매수를 더 경계한다.'
+    ]
+  },
+  bear:{
+    label:'Bear',marketMode:'Bear',tradeMode:'Defensive',badgeClass:'badge-bear',
+    principle:'덜 잃는 날이 결국 오래 버티는 날이다.',
+    reminders:[
+      '포지션 크기를 줄이고 현금을 부끄러워하지 않는다.',
+      '반등 추격보다 무효화 가격이 명확한 자리만 노린다.',
+      '손실 직후에는 냉각 시간을 강제한다.'
+    ]
+  },
+  neutral:{
+    label:'Neutral',marketMode:'Neutral',tradeMode:'Selective',badgeClass:'badge-neutral',
+    principle:'애매하면 패스한다. 돈을 벌 기회는 다시 온다.',
+    reminders:[
+      '거래하지 않는 선택도 규칙 준수로 기록한다.',
+      '확률 우위가 없으면 분석을 더 하고 주문은 미룬다.',
+      '지루함 때문에 하는 거래를 오늘의 적으로 본다.'
+    ]
+  }
+};
+
+const commandments = [
+  {title:'강세장 10계명',tone:'bull',label:'Trend',items:['추세를 거스르지 않는다. 예측보다 추종을 우선한다.','눌림목과 구조적 돌파만 거래한다.','승자는 관리하고 너무 빨리 청산하지 않는다.','핵심 물량은 추세가 살아 있는 동안 유지한다.','수익이 나도 포지션 크기를 임의로 키우지 않는다.','리더 섹터와 강한 종목을 우선한다.','중간값에서의 조급한 진입을 피한다.','강세장일수록 저품질 셋업을 더 많이 버린다.','과신이 느껴지면 거래 수를 줄인다.','항상 출구 규칙을 먼저 적고 진입한다.']},
+  {title:'약세장 10계명',tone:'bear',label:'Defense',items:['첫 번째 목표는 수익이 아니라 생존이다.','평소보다 포지션 크기를 줄인다.','무효화 가격 없는 진입은 금지한다.','반등 추격보다 현금 보유를 우선한다.','손실 만회 목적의 복수 매매를 금지한다.','변동성이 커질수록 거래 빈도를 낮춘다.','상관관계 높은 중복 포지션을 피한다.','강세장 습관을 약세장에 가져오지 않는다.','중요 지지/저항에서만 반응하고, 중간값은 패스한다.','회복 신호 전까지 공격 모드로 전환하지 않는다.']},
+  {title:'절대 원칙 10계명',tone:'neutral',label:'Core',items:['계획 없는 거래는 금지한다.','1회 손실 한도는 사전에 확정한다.','손절과 사이징은 진입 전에 계산한다.','손익비가 기준 이하이면 거래하지 않는다.','진입 이유와 무효화 조건을 문장으로 적는다.','감정이 격하면 주문 크기를 줄이거나 중단한다.','규칙 위반 수익은 성공으로 기록하지 않는다.','연속 손실 뒤에는 냉각 시간을 가진다.','연속 수익 뒤에도 같은 규칙을 유지한다.','시장보다 먼저 나를 관리한다.']}
+];
+
+const checks = [
+  ['Time','지금 세션과 타이밍이 내 규칙에 맞는가? 뉴스 직후 충동 진입은 아닌가?'],
+  ['Risk','손절가, 포지션 크기, 계좌 손실 한도가 계산되었는가?'],
+  ['Analysis','셋업, 추세, 거래량, 무효화 조건이 명확한가?'],
+  ['Discipline','이 거래는 내 플레이북 안에 있는가? 즉흥 아이디어는 아닌가?'],
+  ['Emotion','FOMO, revenge, boredom, 과신 중 하나라도 강하지 않은가?'],
+  ['Reward','최소 기대 보상 대비 위험이 내 기준을 넘는가?']
+];
+
+const principles = [
+  'Time · Risk · Analysis · Discipline · Emotion · Reward',
+  '수익보다 먼저, 내가 지킨 원칙을 본다.',
+  '예측은 의견이고, 손절은 계약이다.',
+  '강한 확신보다 강한 규칙이 오래 간다.',
+  '기회는 다시 오지만, 무너진 원칙은 복구가 어렵다.',
+  '애매한 차트는 패스하고, 명확한 자리만 기다린다.'
+];
+
+const legendCommandments = [
+  {title:'Stan Druckenmiller',tone:'bull',label:'Macro',items:['결과는 미래를 본 자리에서 나온다; 현재를 사지 말고 12~18개월 앞을 본다.','거시가 방향을 정하고, 유동성이 시장을 움직인다.','큰 아이디어에는 크게 배팅하고, 애매한 아이디어는 과감히 버린다.','분산은 기본값이 아니라 선택지다; 확신이 높으면 집중한다.','리스크는 진입 전에 정의하고, 손실 가능성을 먼저 계산한다.','이유가 바뀌면 즉시 나온다; 고집은 실력이 아니다.','작동하지 않는 포지션은 헤지로 버티지 말고 구조를 다시 본다.','잘 맞는 구간에서는 승자를 세게 밀고, 못 맞는 구간에서는 작게 건다.','거시 환경과 정책 변화를 매일 재평가한다.','좋은 트레이더는 똑똑한 사람이 아니라 규율 있게 바꾸는 사람이다.']},
+  {title:'Howard Marks',tone:'neutral',label:'Risk',items:['1차 사고가 아니라 2차 사고를 한다; 시장의 당연함을 의심한다.','리스크는 확률이 아니라 손실의 크기로 본다.','예측보다 준비가 중요하다; 미래를 맞히기보다 대응한다.','사이클을 읽고, 사이클이 주는 과열과 공포를 이용한다.','싸게 사는 것보다 안전하게 사는 것이 장기적으로 더 중요하다.','좋아 보이는 수익률보다 버틸 수 있는 구조를 먼저 본다.','유행을 추종하기보다 비효율이 큰 영역을 찾는다.','과신을 경계하고, 시장이 과도할수록 방어적으로 움직인다.','손실 회피는 비겁함이 아니라 고수의 생존 기술이다.','좋은 투자란 예측의 적중이 아니라 부정확한 세상에서의 준비다.']},
+  {title:'Charlie Munger',tone:'bear',label:'Mental',items:['세상을 단순하게 보되, 멍청함은 절대 단순화하지 않는다.','자신이 이해하는 것만 다룬다; 모르면 하지 않는다.','큰 실수를 피하는 것이 대단한 수익보다 더 중요하다.','좋은 사람이랑만 거래한다; 인성과 평판은 리스크다.','인센티브가 행동을 만든다는 사실을 항상 의심한다.','역산하고 거꾸로 생각한다; 나쁜 결과를 먼저 제거한다.','체크리스트를 써서 실수와 누락을 줄인다.','가격과 가치를 혼동하지 않는다.','시간을 아군으로 만드는 자산만 붙잡는다.','분노, 질투, 허영은 투자와 트레이딩에서 전부 비용이다.']}
+];
+
+const neverDos = [
+  {n:1,text:'절대 오버사이징 하지 않는다. 포지션이 너무 크면 비이성적이 된다. 맞는 방향에서 터지는 것이 가장 빠른 파멸이다.',tags:['sizing','risk']},
+  {n:2,text:'피로하거나 수면이 부족할 때 거래하지 않는다. 판단력 저하는 청산보다 더 많은 트레이더를 무너뜨렸다.',tags:['emotion','discipline']},
+  {n:3,text:'정의된 엣지 없이 거래하지 않는다. 한 문장으로 설명할 수 없다면 엣지가 없는 것이다.',tags:['discipline']},
+  {n:4,text:'지루함 때문에 진입하지 않는다. 아무것도 안 하는 것이 최선인 경우가 많다. 거래 수가 아니라 수익 거래 수가 중요하다.',tags:['emotion','discipline']},
+  {n:5,text:'큰 손실 직후 거래하지 않는다. 틸트 상태에서 한 방에 회복하려는 시도는 더 큰 손실을 보장한다.',tags:['emotion','discipline']},
+  {n:6,text:'출구 계획 없이 진입하지 않는다. 진입 전이 마지막 객관적 순간이다. 손절, 무효화 조건을 먼저 정한다.',tags:['discipline','risk']},
+  {n:7,text:'포지션과 결혼하지 않는다. 시장은 당신의 확신을 신경 쓰지 않는다. 잘라내거나 잘려나간다.',tags:['emotion','discipline']},
+  {n:8,text:'PNL을 보고 거래하지 말고 시장을 보고 거래한다. 손실 추격이나 과거 수익에 집착하면 판단이 흐려진다.',tags:['emotion']},
+  {n:9,text:'모든 견해를 거래로 이어가지 않는다. 최선의 거래는 종종 무거래다. 확률 우위가 있을 때를 위해 자본을 아낀다.',tags:['discipline']},
+  {n:10,text:'추세를 거스르지 않는다. 파도가 당신보다 강하다. 적응하거나 쓸려간다.',tags:['discipline']},
+  {n:11,text:'이유 없이 낙하하는 칼을 잡지 않는다. "싸다"는 것은 더 싸질 수 있다.',tags:['discipline','risk']},
+  {n:12,text:'감정적인 순간에 거래 규칙을 어기거나 계획에서 이탈하지 않는다. "딱 이번만"이라는 생각이 혼돈의 문을 연다.',tags:['discipline','emotion']},
+  {n:13,text:'한 번에 모든 총알을 쏘지 않는다. 분할 진입, 분할 청산이 기본이다.',tags:['sizing','risk']},
+  {n:14,text:'편안함의 한계 밖에서 거래하지 않는다. 포지션이 너무 크면 공포 기반 결정을 내리게 된다. 잠을 잘 잘 수 있는 크기로 거래한다.',tags:['sizing','emotion']},
+  {n:15,text:'자존심 때문에 나쁜 거래를 유지하지 않는다. 틀렸음을 인정하고, 잘라내고, 리셋하고, 앞으로 나간다.',tags:['emotion','discipline']},
+  {n:16,text:'시장의 반사성을 과소평가하지 않는다. 강세는 더 올라갈 수 있고, 약세는 더 내려갈 수 있다.',tags:['discipline']},
+  {n:17,text:'필요할 때 유동성이 있을 것이라고 가정하지 않는다. 출구는 항상 당신이 생각하는 것보다 좁다.',tags:['risk']},
+  {n:18,text:'무작위성을 전략으로 착각하지 않는다. 가격이 오른다고 사거나 "높게 느껴진다"고 공매도하는 것은 거래가 아니다.',tags:['discipline']},
+  {n:19,text:'같은 실수를 두 번 하지 않는다. 거래 실수는 피할 수 없지만 반복은 용납할 수 없다.',tags:['discipline']},
+  {n:20,text:'수비를 잊지 않는다. 틀리는 것은 괜찮지만 틀린 채로 있는 것은 안 된다. 자본 보호가 항상 우선이다.',tags:['risk','discipline']},
+  {n:21,text:'공격에만 집중하지 않는다. 생존이 모든 것보다 우선이다. 칩이 없으면 베팅할 수 없다.',tags:['risk']},
+  {n:22,text:'한 번의 큰 수익 후 라이프스타일 크리프에 빠지지 않는다. 한 번의 행운을 바탕으로 연간 수입을 예측하기 시작할 때 문제가 생긴다.',tags:['emotion']},
+  {n:23,text:'연속 수익 후 방어적으로 전환하는 것을 잊지 않는다. 큰 손실은 과신이 생긴 연승 후에 온다.',tags:['emotion','discipline']},
+  {n:24,text:'자존심, 에고, 과신이 지배하게 두지 않는다. 항상 겸손함을 유지한다.',tags:['emotion']},
+  {n:25,text:'통제할 수 없는 상황에서 거래하지 않는다. FOMC 이벤트 등 불확실성이 극대화된 구간에서 포지션을 유지하지 않는다.',tags:['risk','discipline']},
+  {n:26,text:'자만하지 않는다. 한 레짐에서 작동한 전략이 다른 레짐에서는 안 될 수 있다. 엣지는 영구적이지 않다.',tags:['discipline']},
+  {n:27,text:'논리가 무효화된 후 패자를 평균하지 않는다. 이것이 가장 빠른 계좌 청산의 길이다.',tags:['discipline','risk']},
+  {n:28,text:'확실성으로 거래하지 말고 확신으로 거래한다. 시장에서 확실한 것은 없다.',tags:['discipline']},
+  {n:29,text:'시장이 "반드시" 무언가를 해야 한다고 가정하지 않는다. 시장은 논리나 연속성을 빚진 게 없다.',tags:['discipline']},
+  {n:30,text:'승률을 전부로 착각하지 않는다. 필요한 작은 손실을 회피하면 수익성은 무너진다.',tags:['discipline']},
+  {n:31,text:'규율, 인내, 리스크 관리, 실행을 알파 생성보다 과소평가하지 않는다.',tags:['discipline','risk']},
+  {n:32,text:'큰 손실 후 무너지거나 큰 수익 후 도취되지 않는다. 감정적 회복력이 가장 강한 자산이다.',tags:['emotion']},
+  {n:33,text:'뉴스 후 가격 반응을 무시하지 않는다. 시장이 예상과 반대로 움직이면 즉시 나온다.',tags:['discipline']},
+  {n:34,text:'타인의 확신으로 거래하지 않는다. 자신만의 시스템을 만든다.',tags:['discipline']},
+  {n:35,text:'직관을 무시하지 않는다. 뭔가 이상하다고 느껴지면 보통 그렇다.',tags:['emotion','discipline']},
+  {n:36,text:'모든 움직임을 잡으려 하지 않는다. 모든 공을 칠 필요가 없다.',tags:['discipline','emotion']},
+  {n:37,text:'실패의 힘을 과소평가하지 않는다. 게임에 남아있는 상태에서 일찍, 자주 실패한다.',tags:['discipline']},
+  {n:38,text:'논리가 무효화된 후 패자를 보유하지 않는다. "너무 많이 잃어서 이제 팔 수 없어"는 파멸의 경로다.',tags:['discipline','risk']},
+  {n:39,text:'"본전까지 회복"이 결정을 지배하게 두지 않는다. 그 마인드셋은 과거래로 이어진다.',tags:['emotion','discipline']},
+  {n:40,text:'진입에만 집중하지 않는다. 거래는 청산할 때까지 끝나지 않는다.',tags:['discipline']},
+  {n:41,text:'"지루한" 부분인 포지션 사이징, 손절, 손익비를 무시하지 않는다.',tags:['risk','sizing']},
+  {n:42,text:'아드레날린 러시를 위해 거래하지 않는다. 승리를 위해 거래한다.',tags:['emotion']},
+  {n:43,text:'강세의 환상에 빠지지 않는다. 때로는 현실보다 뒤처진 반응일 수 있다.',tags:['discipline']},
+  {n:44,text:'희망과 희망적 사고로 포지션을 유지하거나 진입하지 않는다.',tags:['emotion','discipline']},
+  {n:45,text:'리스크 관리를 과소평가하지 않는다. 자본 보호가 먼저다.',tags:['risk']},
+  {n:46,text:'포지션을 무분별하게 청산하거나 진입하지 않는다. 스케일인 하듯 스케일아웃도 한다.',tags:['sizing','discipline']},
+  {n:47,text:'감당할 수 없는 금액을 베팅하지 않는다. 단일 거래가 게임을 끝내선 안 된다.',tags:['sizing','risk']},
+  {n:48,text:'엣지 밖에서 거래하지 않는다. 없으면 쉰다.',tags:['discipline']},
+  {n:49,text:'엣지가 영구적이라고 가정하지 않는다. 시장은 진화하고 엣지는 사라진다.',tags:['discipline']},
+  {n:50,text:'거래를 결과만으로 평가하지 않는다. 좋은 거래도 손실이 날 수 있다.',tags:['discipline']},
+  {n:51,text:'자존심 때문에 손실을 못 자르지 않는다. 시장은 당신의 체면을 신경 쓰지 않는다.',tags:['emotion']},
+  {n:52,text:'물러서는 힘을 과소평가하지 않는다. 정신적 자본이 재정적 자본만큼 중요하다.',tags:['emotion','discipline','risk']}
+];
+
+const tagCls = { sizing:'nt-sizing', emotion:'nt-emotion', discipline:'nt-discipline', risk:'nt-risk' };
+const tagLabel = { sizing:'포지션', emotion:'감정', discipline:'규율', risk:'리스크' };
+
+const appState = {
+  theme: 'dark',
+  state: 'neutral',
+  hardStop: false,
+  checks: Array(checks.length).fill(false),
+  journalEntries: []
+};
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+}
+
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return;
+  try{
+    const parsed = JSON.parse(raw);
+    if(parsed && typeof parsed === 'object'){
+      appState.theme = parsed.theme || appState.theme;
+      appState.state = parsed.state || appState.state;
+      appState.hardStop = !!parsed.hardStop;
+      appState.checks = Array.isArray(parsed.checks) ? parsed.checks.slice(0, checks.length) : appState.checks;
+      while(appState.checks.length < checks.length) appState.checks.push(false);
+      appState.journalEntries = Array.isArray(parsed.journalEntries) ? parsed.journalEntries : [];
+    }
+  }catch{}
+}
+
+function renderDeck(deck, container){
+  const card = document.createElement('article');
+  const badgeClass = deck.tone === 'bull' ? 'badge-bull' : deck.tone === 'bear' ? 'badge-bear' : 'badge-neutral';
+  card.className = 'deck-card';
+  card.innerHTML = `
+    <div class="deck-head">
+      <span class="deck-name">${deck.title}</span>
+      <span class="badge ${badgeClass}">${deck.label}</span>
+    </div>
+    <ol class="deck-list">${deck.items.map(item => `<li>${item}</li>`).join('')}</ol>
+  `;
+  container.appendChild(card);
+}
+
+function renderChecklist(){
+  const cl = document.getElementById('checklist');
+  cl.innerHTML = '';
+  checks.forEach(([title, desc], i) => {
+    const lbl = document.createElement('label');
+    lbl.className = 'gate-item';
+    lbl.innerHTML = `
+      <input type="checkbox" data-check="${i}" ${appState.checks[i] ? 'checked' : ''} ${appState.hardStop ? 'disabled' : ''}/>
+      <div>
+        <div class="gate-letter">${title}</div>
+        <div class="gate-desc">${desc}</div>
+      </div>
+    `;
+    cl.appendChild(lbl);
+  });
+
+  document.querySelectorAll('[data-check]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      appState.checks[Number(e.target.dataset.check)] = e.target.checked;
+      calcScore();
+      saveState();
+    });
+  });
+}
+
+function renderReminders(state){
+  const wrap = document.getElementById('reminders');
+  wrap.innerHTML = '';
+  stateMeta[state].reminders.forEach((text, i) => {
+    const d = document.createElement('div');
+    d.className = 'reminder-item';
+    d.innerHTML = `<span>${text}</span><span class="reminder-idx">0${i + 1}</span>`;
+    wrap.appendChild(d);
+  });
+}
+
+function updateState(state, persist = true){
+  appState.state = state;
+  const meta = stateMeta[state];
+  document.getElementById('marketModeText').textContent = meta.marketMode;
+  document.getElementById('tradeModeText').textContent = meta.tradeMode;
+  if(!appState.hardStop){
+    document.getElementById('heroPrinciple').textContent = meta.principle;
+  }
+
+  const badge = document.getElementById('stateBadge');
+  badge.className = `badge ${meta.badgeClass}`;
+  badge.textContent = meta.label;
+
+  renderReminders(state);
+
+  document.querySelectorAll('.state-btn').forEach(btn => {
+    btn.className = 'state-btn';
+    if(btn.dataset.state === state) btn.classList.add(`active-${state}`);
+    btn.disabled = appState.hardStop;
+    btn.style.opacity = appState.hardStop ? '.55' : '1';
+  });
+
+  updateSessionBanner();
+  if(persist) saveState();
+}
+
+function getLossStreak(entries){
+  let streak = 0;
+  for(let i = entries.length - 1; i >= 0; i--){
+    if(entries[i].outcome === '손실') streak++;
+    else break;
+  }
+  return streak;
+}
+
+function calcScore(){
+  const checked = appState.checks.filter(Boolean).length;
+  const entries = appState.journalEntries;
+  const avgD = entries.length ? Math.round(entries.reduce((a,b) => a + Number(b.discipline || 0), 0) / entries.length) : 0;
+  const score = appState.hardStop ? 0 : Math.min(100, Math.round((checked / checks.length) * 55 + avgD * .45));
+  const readiness = appState.hardStop ? 'Locked' : checked === 6 ? 'Ready' : checked >= 4 ? 'Near-ready' : 'Standby';
+
+  document.getElementById('ruleScore').textContent = score;
+  document.getElementById('scoreBar').style.width = `${score}%`;
+  document.getElementById('gateSummary').textContent = `${checked} / 6`;
+  document.getElementById('sb-score').textContent = `${score}/100`;
+  document.getElementById('sb-gate').textContent = `${checked}/6`;
+  document.getElementById('readinessText').textContent = readiness;
+
+  const gateBadge = document.getElementById('gateBadge');
+  if(appState.hardStop){
+    gateBadge.className = 'badge badge-bear';
+    gateBadge.textContent = 'Locked';
+  }else if(checked === 6){
+    gateBadge.className = 'badge badge-bull';
+    gateBadge.textContent = 'Unlocked';
+  }else if(checked >= 4){
+    gateBadge.className = 'badge badge-neutral';
+    gateBadge.textContent = 'Almost';
+  }else{
+    gateBadge.className = 'badge badge-info';
+    gateBadge.textContent = 'Locked';
+  }
+
+  const foot = document.getElementById('heroFootStatus');
+  if(appState.hardStop){
+    foot.innerHTML = `<span class="readiness-dot" style="background:var(--bear)"></span> Hard stop engaged`;
+  }else if(checked === 6){
+    foot.innerHTML = `<span class="readiness-dot" style="background:var(--acc)"></span> Plan-qualified session`;
+  }else if(checked >= 4){
+    foot.innerHTML = `<span class="readiness-dot" style="background:var(--neutral)"></span> Need final confirmation`;
+  }else{
+    foot.innerHTML = `<span class="readiness-dot" style="background:var(--neutral)"></span> Watchlist only`;
+  }
+
+  updateSessionBanner();
+}
+
+function renderJournal(){
+  const entries = appState.journalEntries;
+  const log = document.getElementById('journalLog');
+  log.innerHTML = '';
+
+  [...entries].reverse().forEach(entry => {
+    const div = document.createElement('article');
+    div.className = 'log-card';
+    const d = Number(entry.discipline || 0);
+    const badgeClass = d >= 75 ? 'badge-bull' : d >= 50 ? 'badge-neutral' : 'badge-bear';
+    const badgeText = d >= 75 ? '규칙 우선' : d >= 50 ? '주의' : '위반 경고';
+    div.innerHTML = `
+      <div class="log-top">
+        <div>
+          <div class="log-asset">${entry.asset}</div>
+          <div class="tag-row">
+            <span class="tag">${entry.regime}</span>
+            <span class="tag">${entry.outcome}</span>
+            <span class="tag">감정 ${entry.emotion}/10</span>
+            <span class="tag">준수 ${entry.discipline}/100</span>
+            ${entry.rr ? `<span class="tag">${entry.rr}</span>` : ''}
+          </div>
+        </div>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="log-notes">${entry.notes || '메모 없음'}</div>
+    `;
+    log.appendChild(div);
+  });
+
+  const cnt = entries.length;
+  const avgEmotion = cnt ? (entries.reduce((a,b) => a + Number(b.emotion || 0), 0) / cnt).toFixed(1) : '0';
+  const avgDiscipline = cnt ? Math.round(entries.reduce((a,b) => a + Number(b.discipline || 0), 0) / cnt) : 0;
+  const streak = getLossStreak(entries);
+
+  document.getElementById('entriesCount').textContent = cnt;
+  document.getElementById('avgEmotion').textContent = avgEmotion;
+  document.getElementById('avgDiscipline').textContent = avgDiscipline;
+  document.getElementById('disciplineIndex').textContent = avgDiscipline || 0;
+  document.getElementById('lossStreak').textContent = streak;
+  document.getElementById('sb-journal').textContent = `${cnt} entries`;
+  document.getElementById('sb-streak').textContent = streak;
+
+  const badge = document.getElementById('disciplineBadge');
+  if(avgDiscipline >= 75){
+    badge.className = 'badge badge-bull';
+    badge.textContent = '양호 · 규칙 우선';
+  }else if(avgDiscipline >= 50){
+    badge.className = 'badge badge-neutral';
+    badge.textContent = '보통 · 흔들림 경계';
+  }else{
+    badge.className = 'badge badge-bear';
+    badge.textContent = '경고 · 거래 축소';
+  }
+
+  if(!appState.hardStop){
+    const criticalEmotion = entries.slice(-2).some(e => Number(e.emotion) <= 4);
+    if(streak >= 3 || criticalEmotion){
+      activateHardStop('최근 기록이 리스크 기준을 위반했습니다. 오늘은 거래를 중단합니다.');
+    }
+  }
+
+  calcScore();
+}
+
+function renderNeverDos(filter = 'all', query = ''){
+  const grid = document.getElementById('neverGrid');
+  const empty = document.getElementById('neverEmpty');
+  grid.innerHTML = '';
+  const q = query.trim().toLowerCase();
+
+  const filtered = neverDos.filter(item =>
+    (filter === 'all' || item.tags.includes(filter)) &&
+    (!q || item.text.toLowerCase().includes(q) || String(item.n).includes(q))
+  );
+
+  if(!filtered.length){
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filtered.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'never-card';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <span class="never-num">${String(item.n).padStart(2,'0')}</span>
+        <div class="never-tags">
+          ${item.tags.map(t => `<span class="ntp ${tagCls[t]}">${tagLabel[t]}</span>`).join('')}
+        </div>
+      </div>
+      <p class="never-text">${item.text}</p>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function updateSessionBanner(){
+  const checked = appState.checks.filter(Boolean).length;
+  const banner = document.getElementById('statusBanner');
+  const text = document.getElementById('statusBannerText');
+  const badge = document.getElementById('sessionModeBadge');
+  const hardStopState = document.getElementById('hardStopState');
+  const systemStatusText = document.getElementById('systemStatusText');
+
+  if(appState.hardStop){
+    banner.className = 'status-banner is-locked';
+    text.textContent = 'Hard Stop 활성화. 새로운 진입은 금지하고, 오늘의 판단과 감정만 복기합니다.';
+    badge.className = 'badge badge-bear';
+    badge.textContent = 'Hard Stop';
+    hardStopState.textContent = 'ON';
+    hardStopState.style.color = 'var(--bear)';
+    systemStatusText.textContent = 'Hard stop active';
+  }else if(checked === 6){
+    banner.className = 'status-banner is-clear';
+    text.textContent = '모든 게이트가 통과되었습니다. 계획된 셋업만 집행하고, 크기는 규칙 안에 둡니다.';
+    badge.className = 'badge badge-bull';
+    badge.textContent = 'Execution Ready';
+    hardStopState.textContent = 'OFF';
+    hardStopState.style.color = 'var(--acc)';
+    systemStatusText.textContent = 'System active';
+  }else if(checked >= 4){
+    banner.className = 'status-banner';
+    text.textContent = '거의 준비되었습니다. 마지막 두 항목이 충동인지 계획인지 구분해 주세요.';
+    badge.className = 'badge badge-neutral';
+    badge.textContent = 'Near-ready';
+    hardStopState.textContent = 'OFF';
+    hardStopState.style.color = 'var(--acc)';
+    systemStatusText.textContent = 'System active';
+  }else{
+    banner.className = 'status-banner';
+    text.textContent = '현재 세션은 감시 상태입니다. 체크리스트를 통과하면 진입 준비로 전환됩니다.';
+    badge.className = 'badge badge-info';
+    badge.textContent = 'Standby';
+    hardStopState.textContent = 'OFF';
+    hardStopState.style.color = 'var(--acc)';
+    systemStatusText.textContent = 'System active';
+  }
+}
+
+function activateHardStop(message){
+  appState.hardStop = true;
+  appState.checks = appState.checks.map(() => false);
+  document.getElementById('heroPrinciple').textContent = message || '오늘은 더 벌기보다, 원칙을 지키고 마감한다.';
+  renderChecklist();
+  updateState(appState.state, false);
+  renderJournal();
+  calcScore();
+  saveState();
+}
+
+function releaseHardStop(){
+  appState.hardStop = false;
+  renderChecklist();
+  updateState(appState.state, false);
+  renderJournal();
+  calcScore();
+  saveState();
+}
+
+function exportJournal(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    state: appState.state,
+    hardStop: appState.hardStop,
+    journalEntries: appState.journalEntries
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `trader-journal-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetSession(){
+  appState.checks = appState.checks.map(() => false);
+  appState.hardStop = false;
+  renderChecklist();
+  updateState(appState.state, false);
+  calcScore();
+  saveState();
+}
+
+function initTheme(){
+  const toggle = document.querySelector('[data-theme-toggle]');
+  const root = document.documentElement;
+  const savedTheme = appState.theme || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+
+  function setTheme(mode){
+    appState.theme = mode;
+    root.setAttribute('data-theme', mode);
+    toggle.textContent = mode === 'dark' ? '◑ 라이트' : '◑ 다크';
+    saveState();
+  }
+
+  setTheme(savedTheme);
+
+  toggle.addEventListener('click', () => {
+    setTheme(appState.theme === 'dark' ? 'light' : 'dark');
+  });
+}
+
+function tick(){
+  document.getElementById('liveclock').textContent = new Date().toLocaleTimeString('ko-KR', {
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+  });
+}
+
+function initNavigation(){
+  const sections = [...document.querySelectorAll('main section')];
+  const links = [...document.querySelectorAll('.nav a,.mob-nav a')];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+      }
+    });
+  }, { rootMargin:'-35% 0px -45% 0px', threshold:.1 });
+
+  sections.forEach(section => observer.observe(section));
+}
+
+function bindEvents(){
+  document.querySelectorAll('.state-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(appState.hardStop) return;
+      updateState(btn.dataset.state);
+    });
+  });
+
+  document.getElementById('shufflePrinciple').addEventListener('click', () => {
+    if(appState.hardStop) return;
+    document.getElementById('heroPrinciple').textContent = principles[Math.floor(Math.random() * principles.length)];
+  });
+
+  document.getElementById('hardStopBtn').addEventListener('click', () => {
+    activateHardStop('오늘은 더 벌기보다, 원칙을 지키고 마감한다.');
+  });
+
+  document.getElementById('resumeSessionBtn').addEventListener('click', releaseHardStop);
+  document.getElementById('exportJournalBtn').addEventListener('click', exportJournal);
+  document.getElementById('resetSessionBtn').addEventListener('click', resetSession);
+
+  document.getElementById('journalForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    appState.journalEntries.push({
+      asset: fd.get('asset'),
+      regime: fd.get('regime'),
+      outcome: fd.get('outcome'),
+      emotion: Number(fd.get('emotion')),
+      discipline: Number(fd.get('discipline')),
+      rr: fd.get('rr'),
+      notes: fd.get('notes')
+    });
+    e.target.reset();
+    renderJournal();
+    saveState();
+  });
+
+  document.getElementById('seedExample').addEventListener('click', () => {
+    appState.journalEntries.push({
+      asset:'BTC',
+      regime:'중립/관망',
+      outcome:'무거래',
+      emotion:8,
+      discipline:92,
+      rr:'No trade',
+      notes:'셋업은 있었지만 거래량 확신이 부족했고 중간값 추격 가능성이 커서 패스했다. 오늘의 좋은 결정은 거래하지 않은 것이다.'
+    });
+    renderJournal();
+    saveState();
+  });
+
+  document.getElementById('clearJournalBtn').addEventListener('click', () => {
+    appState.journalEntries = [];
+    renderJournal();
+    saveState();
+  });
+
+  document.getElementById('neverSearch').addEventListener('input', e => {
+    renderNeverDos(document.querySelector('.filter-btn.active')?.dataset.filter || 'all', e.target.value);
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderNeverDos(btn.dataset.filter, document.getElementById('neverSearch').value);
+    });
+  });
+}
+
+function init(){
+  loadState();
+  commandments.forEach(d => renderDeck(d, document.getElementById('commandmentDecks')));
+  legendCommandments.forEach(d => renderDeck(d, document.getElementById('legendDecks')));
+  renderChecklist();
+  renderNeverDos();
+  renderJournal();
+  initTheme();
+  bindEvents();
+  updateState(appState.state, false);
+  calcScore();
+  initNavigation();
+  tick();
+  setInterval(tick, 1000);
+}
+
+init();
+</script>
+</body>
+</html>
