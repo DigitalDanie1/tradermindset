@@ -9,51 +9,54 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#071017;
-  --bg2:#0c1720;
-  --bg3:#12202b;
-  --bg4:#182a37;
-  --panel:rgba(12,23,32,.84);
-  --panel-strong:rgba(10,19,27,.94);
-  --border:#1f3444;
-  --border2:#2a4459;
-  --txt:#e4eef7;
-  --txt2:#a9bfd0;
-  --txt3:#6f8798;
-  --acc:#3be0a3;
-  --acc2:#12b97d;
-  --acc-dim:rgba(59,224,163,.12);
-  --bull:#3be0a3;
-  --bear:#ff6d84;
-  --neutral:#ffbc5a;
-  --info:#73b8ff;
-  --bull-dim:rgba(59,224,163,.12);
-  --bear-dim:rgba(255,109,132,.12);
-  --neutral-dim:rgba(255,188,90,.12);
-  --info-dim:rgba(115,184,255,.12);
+  --bg:#061018;
+  --bg2:#0b1722;
+  --bg3:#12202d;
+  --bg4:#192c3a;
+  --panel:rgba(10,19,29,.84);
+  --panel-strong:rgba(7,14,21,.94);
+  --border:#1e3448;
+  --border2:#2d475c;
+  --txt:#e5f0fa;
+  --txt2:#abc1d3;
+  --txt3:#698194;
+  --acc:#4cf2b2;
+  --acc2:#20c98c;
+  --cyan:#7cd2ff;
+  --mag:#ff4fcf;
+  --bull:#4cf2b2;
+  --bear:#ff7286;
+  --neutral:#ffbf67;
+  --info:#7cd2ff;
+  --bull-dim:rgba(76,242,178,.12);
+  --bear-dim:rgba(255,114,134,.12);
+  --neutral-dim:rgba(255,191,103,.12);
+  --info-dim:rgba(124,210,255,.12);
+  --acc-dim:rgba(76,242,178,.12);
   --font-mono:'DM Mono',monospace;
   --font-display:'Space Grotesk',sans-serif;
   --r:8px;
   --r2:16px;
   --r3:24px;
-  --shadow:0 0 0 1px rgba(255,255,255,.025),0 18px 60px rgba(0,0,0,.35);
+  --shadow:0 0 0 1px rgba(255,255,255,.025),0 18px 60px rgba(0,0,0,.38);
   --t:180ms ease;
 }
 [data-theme="light"]{
-  --bg:#eef3f7;
+  --bg:#eef4f8;
   --bg2:#f8fbfd;
   --bg3:#ffffff;
   --bg4:#eef4f8;
   --panel:rgba(255,255,255,.88);
   --panel-strong:rgba(255,255,255,.96);
-  --border:#d7e1e8;
+  --border:#d8e1e9;
   --border2:#bfd0db;
   --txt:#132231;
-  --txt2:#51687a;
-  --txt3:#7e94a7;
+  --txt2:#53697c;
+  --txt3:#7f95a7;
   --acc:#0b8d64;
   --acc2:#066546;
-  --acc-dim:rgba(11,141,100,.09);
+  --cyan:#2d7fe3;
+  --mag:#c03ba0;
   --bull:#0b8d64;
   --bear:#c73d53;
   --neutral:#b3720e;
@@ -62,6 +65,7 @@
   --bear-dim:rgba(199,61,83,.1);
   --neutral-dim:rgba(179,114,14,.1);
   --info-dim:rgba(45,127,227,.1);
+  --acc-dim:rgba(11,141,100,.09);
   --shadow:0 0 0 1px rgba(20,35,50,.04),0 14px 40px rgba(15,23,42,.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -72,19 +76,20 @@ body{
   line-height:1.7;
   color:var(--txt);
   background:
-    radial-gradient(circle at top left, rgba(59,224,163,.10), transparent 28%),
-    radial-gradient(circle at 80% 20%, rgba(115,184,255,.10), transparent 26%),
-    linear-gradient(180deg,var(--bg),#04080c 140%);
+    radial-gradient(circle at 12% 14%, rgba(76,242,178,.10), transparent 26%),
+    radial-gradient(circle at 78% 18%, rgba(124,210,255,.12), transparent 24%),
+    radial-gradient(circle at 88% 38%, rgba(255,79,207,.08), transparent 20%),
+    linear-gradient(180deg,var(--bg),#04080c 145%);
   min-height:100dvh;
   overflow-x:hidden;
 }
 body::before{
   content:'';
   position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.018) 3px,rgba(255,255,255,.018) 4px);
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.016) 3px,rgba(255,255,255,.016) 4px);
   pointer-events:none;
   z-index:999;
-  opacity:.6;
+  opacity:.65;
 }
 a{color:inherit;text-decoration:none}
 button{border:none;background:none;color:inherit;font:inherit;cursor:pointer}
@@ -105,8 +110,9 @@ img,svg{display:block}
 .brand-mark{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .logo-box{
   width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--acc-dim),rgba(115,184,255,.08));
-  border:1px solid rgba(59,224,163,.28);
+  background:linear-gradient(135deg,var(--acc-dim),rgba(124,210,255,.10));
+  border:1px solid rgba(76,242,178,.28);
+  box-shadow:0 0 22px rgba(76,242,178,.10),0 0 30px rgba(124,210,255,.05);
 }
 .logo-box svg{width:18px;height:18px;stroke:var(--acc)}
 .brand-name{font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:.05em}
@@ -122,7 +128,7 @@ img,svg{display:block}
   color:var(--txt3);font-size:11px;letter-spacing:.07em;text-transform:uppercase;transition:all var(--t)
 }
 .nav a:hover{background:var(--bg3);border-color:var(--border);color:var(--txt)}
-.nav a.active{background:var(--acc-dim);border-color:rgba(59,224,163,.24);color:var(--acc)}
+.nav a.active{background:var(--acc-dim);border-color:rgba(76,242,178,.24);color:var(--acc)}
 .nav-num{font-size:9px;opacity:.55;min-width:16px}
 
 .sidebar-bottom{padding:14px 16px;border-top:1px solid var(--border);display:grid;gap:10px}
@@ -144,9 +150,9 @@ img,svg{display:block}
   color:var(--txt2);font-size:11px;letter-spacing:.05em;transition:all var(--t)
 }
 .btn:hover{background:var(--bg4);color:var(--txt)}
-.btn-acc{background:var(--acc-dim);border-color:rgba(59,224,163,.26);color:var(--acc)}
+.btn-acc{background:var(--acc-dim);border-color:rgba(76,242,178,.26);color:var(--acc)}
 .btn-acc:hover{background:var(--acc);border-color:var(--acc);color:#08110d}
-.btn-danger{background:var(--bear-dim);border-color:rgba(255,109,132,.28);color:var(--bear)}
+.btn-danger{background:var(--bear-dim);border-color:rgba(255,114,134,.28);color:var(--bear)}
 .btn-danger:hover{background:var(--bear);border-color:var(--bear);color:#fff}
 
 .section{margin-bottom:38px}
@@ -172,13 +178,13 @@ img,svg{display:block}
   font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:500
 }
 .badge::before{content:'';width:6px;height:6px;border-radius:50%}
-.badge-bull{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(59,224,163,.22)}
+.badge-bull{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(76,242,178,.22)}
 .badge-bull::before{background:var(--bull)}
-.badge-bear{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,109,132,.22)}
+.badge-bear{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,114,134,.22)}
 .badge-bear::before{background:var(--bear)}
-.badge-neutral{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,188,90,.22)}
+.badge-neutral{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,191,103,.22)}
 .badge-neutral::before{background:var(--neutral)}
-.badge-info{background:var(--info-dim);color:var(--info);border:1px solid rgba(115,184,255,.22)}
+.badge-info{background:var(--info-dim);color:var(--info);border:1px solid rgba(124,210,255,.22)}
 .badge-info::before{background:var(--info)}
 
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -191,19 +197,22 @@ img,svg{display:block}
 .hero-card{
   position:relative;
   overflow:hidden;
-  min-height:420px;
+  min-height:430px;
   background:
-    linear-gradient(120deg, rgba(7,16,23,.96) 0%, rgba(7,16,23,.84) 44%, rgba(7,16,23,.52) 100%),
-    radial-gradient(circle at 15% 15%, rgba(59,224,163,.10), transparent 28%),
+    linear-gradient(115deg, rgba(6,12,18,.98) 0%, rgba(8,15,23,.92) 44%, rgba(8,15,23,.46) 100%),
+    radial-gradient(circle at 18% 18%, rgba(76,242,178,.09), transparent 24%),
+    radial-gradient(circle at 82% 28%, rgba(124,210,255,.14), transparent 18%),
+    radial-gradient(circle at 92% 44%, rgba(255,79,207,.10), transparent 18%),
     var(--panel-strong);
 }
 [data-theme="light"] .hero-card{
   background:
-    linear-gradient(120deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.88) 48%, rgba(255,255,255,.65) 100%),
-    radial-gradient(circle at 15% 15%, rgba(11,141,100,.08), transparent 28%),
+    linear-gradient(115deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.90) 48%, rgba(255,255,255,.66) 100%),
+    radial-gradient(circle at 82% 28%, rgba(45,127,227,.10), transparent 18%),
+    radial-gradient(circle at 90% 44%, rgba(192,59,160,.08), transparent 18%),
     var(--panel-strong);
 }
-.hero-content{position:relative;z-index:2;max-width:58%}
+.hero-content{position:relative;z-index:2;max-width:52%}
 .hero-eyebrow{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
 .hero-title{
   font-family:var(--font-display);
@@ -225,14 +234,13 @@ img,svg{display:block}
   right:-4%;
   top:50%;
   transform:translateY(-50%);
-  width:min(44vw,620px);
+  width:min(49vw,760px);
   height:auto;
-  opacity:.22;
+  opacity:.34;
   z-index:1;
   pointer-events:none;
-  filter:drop-shadow(0 0 30px rgba(59,224,163,.12));
+  filter:drop-shadow(18px 10px 42px rgba(0,0,0,.28));
 }
-[data-theme="light"] .numeric-face{opacity:.14}
 .stat-strip{
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--border);border:1px solid var(--border);border-radius:18px;overflow:hidden
@@ -241,7 +249,7 @@ img,svg{display:block}
 .sc-label{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
 .sc-val{font-family:var(--font-display);font-size:18px;font-weight:700}
 .score-track{height:6px;background:var(--bg4);border-radius:999px;overflow:hidden;margin-top:14px;border:1px solid var(--border)}
-.score-fill{height:100%;width:0;background:linear-gradient(90deg,var(--bear),var(--neutral),var(--acc));transition:width 400ms cubic-bezier(.16,1,.3,1)}
+.score-fill{height:100%;width:0;background:linear-gradient(90deg,var(--mag),var(--cyan),var(--acc));transition:width 400ms cubic-bezier(.16,1,.3,1)}
 .hero-foot{
   display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
   margin-top:14px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3)
@@ -254,9 +262,9 @@ img,svg{display:block}
   background:var(--bg3);color:var(--txt3);font-size:11px;letter-spacing:.06em;text-transform:uppercase;transition:all var(--t)
 }
 .state-btn:hover{color:var(--txt)}
-.state-btn.active-bull{background:var(--bull-dim);border-color:rgba(59,224,163,.3);color:var(--bull)}
-.state-btn.active-bear{background:var(--bear-dim);border-color:rgba(255,109,132,.3);color:var(--bear)}
-.state-btn.active-neutral{background:var(--neutral-dim);border-color:rgba(255,188,90,.3);color:var(--neutral)}
+.state-btn.active-bull{background:var(--bull-dim);border-color:rgba(76,242,178,.3);color:var(--bull)}
+.state-btn.active-bear{background:var(--bear-dim);border-color:rgba(255,114,134,.3);color:var(--bear)}
+.state-btn.active-neutral{background:var(--neutral-dim);border-color:rgba(255,191,103,.3);color:var(--neutral)}
 .principle-box{
   background:rgba(255,255,255,.02);
   border:1px solid var(--border2);
@@ -273,8 +281,8 @@ img,svg{display:block}
   margin-top:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--border);
   background:var(--bg3);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap
 }
-.status-banner.is-clear{background:var(--bull-dim);border-color:rgba(59,224,163,.24)}
-.status-banner.is-locked{background:var(--bear-dim);border-color:rgba(255,109,132,.24)}
+.status-banner.is-clear{background:var(--bull-dim);border-color:rgba(76,242,178,.24)}
+.status-banner.is-locked{background:var(--bear-dim);border-color:rgba(255,114,134,.24)}
 
 .deck-card{background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:transform var(--t),border-color var(--t)}
 .deck-card:hover{transform:translateY(-2px);border-color:var(--border2)}
@@ -297,7 +305,7 @@ img,svg{display:block}
   display:flex;gap:12px;align-items:flex-start;
   padding:14px;border-radius:16px;background:var(--bg3);border:1px solid var(--border);transition:all var(--t);cursor:pointer
 }
-.gate-item:has(input:checked){background:var(--acc-dim);border-color:rgba(59,224,163,.24)}
+.gate-item:has(input:checked){background:var(--acc-dim);border-color:rgba(76,242,178,.24)}
 .gate-item input{margin-top:4px;width:14px;height:14px;accent-color:var(--acc)}
 .gate-letter{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--acc);min-width:86px}
 .gate-desc{font-size:11.5px;color:var(--txt2);line-height:1.75}
@@ -339,7 +347,7 @@ img,svg{display:block}
   color:var(--txt3);font-size:10px;letter-spacing:.06em;text-transform:uppercase;transition:all var(--t)
 }
 .filter-btn:hover{color:var(--txt)}
-.filter-btn.active{background:var(--acc-dim);border-color:rgba(59,224,163,.28);color:var(--acc)}
+.filter-btn.active{background:var(--acc-dim);border-color:rgba(76,242,178,.28);color:var(--acc)}
 .search-input{width:170px}
 
 .never-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
@@ -352,10 +360,10 @@ img,svg{display:block}
 .never-text{font-size:11.8px;color:var(--txt2);line-height:1.78}
 .never-tags{display:flex;gap:4px;flex-wrap:wrap}
 .ntp{padding:2px 7px;border-radius:999px;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
-.nt-sizing{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(59,224,163,.2)}
-.nt-emotion{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,109,132,.2)}
-.nt-discipline{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,188,90,.2)}
-.nt-risk{background:var(--info-dim);color:var(--info);border:1px solid rgba(115,184,255,.2)}
+.nt-sizing{background:var(--bull-dim);color:var(--bull);border:1px solid rgba(76,242,178,.2)}
+.nt-emotion{background:var(--bear-dim);color:var(--bear);border:1px solid rgba(255,114,134,.2)}
+.nt-discipline{background:var(--neutral-dim);color:var(--neutral);border:1px solid rgba(255,191,103,.2)}
+.nt-risk{background:var(--info-dim);color:var(--info);border:1px solid rgba(124,210,255,.2)}
 
 .empty-state{text-align:center;padding:42px;color:var(--txt3);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 .footer-line{margin-top:18px;padding:18px 0 0;border-top:1px solid var(--border);text-align:center;font-size:10px;color:var(--txt3);letter-spacing:.06em}
@@ -370,11 +378,13 @@ img,svg{display:block}
   .hero-content{max-width:none}
   .numeric-face{
     position:relative;
-    right:auto;top:auto;transform:none;
+    right:auto;
+    top:auto;
+    transform:none;
     width:100%;
-    max-width:420px;
-    margin:12px auto 0;
-    opacity:.14;
+    max-width:500px;
+    margin:18px auto 0;
+    opacity:.18;
   }
   .mob-nav{
     position:fixed;left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:4px;
@@ -398,7 +408,7 @@ img,svg{display:block}
         </div>
         <div>
           <div class="brand-name">T.R.A.D.E.R.</div>
-          <div class="brand-sub">Trading OS v3.2</div>
+          <div class="brand-sub">Trading OS v3.3</div>
         </div>
       </div>
       <div class="sys-status">
@@ -448,7 +458,7 @@ img,svg{display:block}
         <div class="card hero-card">
           <div class="card-body" style="padding:24px;position:relative;height:100%">
             <div class="hero-content">
-              <div class="hero-eyebrow">Cold terminal trader OS</div>
+              <div class="hero-eyebrow">Cybernetic market discipline</div>
               <h2 class="hero-title">원칙이 열려야<br>포지션이 열린다.</h2>
               <p class="hero-desc">이 시스템은 종목 추천이 아니라 행동 제어판입니다. 시장 상태를 먼저 정하고, 프리트레이드 게이트를 통과한 뒤, 실행 또는 무거래를 기록해 규칙 중심으로 판단합니다.</p>
 
@@ -479,42 +489,167 @@ img,svg{display:block}
               </div>
             </div>
 
-            <svg class="numeric-face" viewBox="0 0 520 620" aria-hidden="true">
+            <svg class="numeric-face" viewBox="0 0 680 820" aria-hidden="true">
               <defs>
-                <linearGradient id="fg" x1="0" x2="1">
-                  <stop offset="0%" stop-color="#79cfff"/>
-                  <stop offset="55%" stop-color="#43e0a7"/>
-                  <stop offset="100%" stop-color="#ffffff"/>
+                <linearGradient id="faceTextGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#4d6a7f"/>
+                  <stop offset="38%" stop-color="#74a6c7"/>
+                  <stop offset="68%" stop-color="#45e0aa"/>
+                  <stop offset="100%" stop-color="#f3fffd"/>
                 </linearGradient>
+
+                <linearGradient id="rimLight" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+                  <stop offset="55%" stop-color="rgba(124,210,255,.10)"/>
+                  <stop offset="76%" stop-color="rgba(76,242,178,.14)"/>
+                  <stop offset="100%" stop-color="rgba(255,79,207,.26)"/>
+                </linearGradient>
+
+                <radialGradient id="coreGlow" cx="74%" cy="36%" r="42%">
+                  <stop offset="0%" stop-color="rgba(124,210,255,.40)"/>
+                  <stop offset="34%" stop-color="rgba(76,242,178,.22)"/>
+                  <stop offset="70%" stop-color="rgba(255,79,207,.12)"/>
+                  <stop offset="100%" stop-color="rgba(79,233,188,0)"/>
+                </radialGradient>
+
+                <radialGradient id="shadowMass" cx="28%" cy="45%" r="55%">
+                  <stop offset="0%" stop-color="rgba(5,11,18,.54)"/>
+                  <stop offset="55%" stop-color="rgba(5,11,18,.24)"/>
+                  <stop offset="100%" stop-color="rgba(5,11,18,0)"/>
+                </radialGradient>
+
+                <filter id="tinyBlur">
+                  <feGaussianBlur stdDeviation="0.55"/>
+                </filter>
+
+                <clipPath id="faceClip">
+                  <path d="M337 72
+                           C425 72 507 118 556 203
+                           C595 271 605 359 591 447
+                           C576 539 537 627 468 688
+                           C430 722 387 741 338 747
+                           C289 741 246 722 208 688
+                           C139 627 100 539 85 447
+                           C71 359 81 271 120 203
+                           C169 118 251 72 337 72Z"/>
+                </clipPath>
+
+                <mask id="textFade">
+                  <rect width="680" height="820" fill="white"/>
+                  <ellipse cx="214" cy="390" rx="185" ry="290" fill="black" opacity=".36"/>
+                  <ellipse cx="470" cy="332" rx="158" ry="260" fill="white" opacity=".9"/>
+                </mask>
               </defs>
 
-              <g fill="url(#fg)" font-family="DM Mono, monospace" font-size="11" opacity=".95">
-                <text x="232" y="52">001001 BTC 010101 NVDA +2.4R 001101</text>
-                <text x="175" y="74">RR 2.5 1110 TAPE BTC BTC 010 1001 001</text>
-                <text x="144" y="96">+1R +2R 0101101 PRICE FLOW 0110 10011 0</text>
-                <text x="120" y="118">MARKET TREND 0011 BIAS 011 BTC 1001 FLOW</text>
-                <text x="98" y="140">001001010 LIQUIDITY LIQUIDITY 00101 01001</text>
-                <text x="88" y="162">DELTA ORDERBOOK BTC NVDA 0101 0110 10011</text>
-                <text x="76" y="184">0011 001001 101101 RISK REWARD 0101010101</text>
-                <text x="70" y="206">T R A D E R  001001011  ORDER FLOW 011010</text>
-                <text x="66" y="228">010110010110 MARKET STRUCTURE 0101010010</text>
-                <text x="64" y="250">010101 BTC 0010111  LOWER HIGH 00101101</text>
-                <text x="64" y="272">0110010110 SELLER ABSORPTION 0101001101</text>
-                <text x="66" y="294">01011011 0010111  +3.4R 010010110101011</text>
-                <text x="72" y="316">0100110 DISCIPLINE FIRST 010101101001010</text>
-                <text x="86" y="338">001101011001  NO FOMO  010101001101011</text>
-                <text x="104" y="360">0110100101  BTC  BTC  BTC  010101001101</text>
-                <text x="128" y="382">001101010011 LIQUIDITY SWEEP 001100101</text>
-                <text x="154" y="404">010101011   PATIENCE   0101010100101</text>
-                <text x="182" y="426">00110101   +1.8R   01010100101</text>
-                <text x="210" y="448">01011  EDGE  0010101 0101</text>
-                <text x="236" y="470">001010010110100100101</text>
+              <ellipse cx="432" cy="356" rx="235" ry="280" fill="url(#coreGlow)" opacity=".75"/>
+              <ellipse cx="252" cy="390" rx="235" ry="300" fill="url(#shadowMass)" opacity=".92"/>
+
+              <g clip-path="url(#faceClip)" mask="url(#textFade)">
+                <g fill="url(#faceTextGrad)" font-family="DM Mono, monospace" font-size="12" letter-spacing=".6" opacity=".92" filter="url(#tinyBlur)">
+                  <text x="166" y="92">001011 BTC FLOW 010101 NVDA +2.1R 001001010 011</text>
+                  <text x="135" y="118">MARKET STRUCTURE 00101 011010 BTC 10010110 DELTA</text>
+                  <text x="114" y="144">ORDER FLOW 0110101 001101 DISCIPLINE FIRST 010011</text>
+                  <text x="102" y="170">010101001 LIQUIDITY BTC BTC 01011010 REACT 011001</text>
+                  <text x="94" y="196">T R A D E R 0101010101 RISK REWARD 00110101010011</text>
+                  <text x="88" y="222">0101011010010110 LOWER HIGH 00101101011010 BTC</text>
+                  <text x="84" y="248">0010010110101011 ABSORPTION 01010100101011 FLOW</text>
+                  <text x="80" y="274">0110100101101010011101 NO FOMO 01010010101 EDGE</text>
+                  <text x="78" y="300">0101010010101101010101 PATIENCE 0010110101 TAPE</text>
+                  <text x="78" y="326">0011010010101010101010 BTC BTC BTC 01010101 RR</text>
+                  <text x="80" y="352">0100101101010101 EXECUTION 001010110101001 NVDA</text>
+                  <text x="84" y="378">001010110101001010110 STRUCTURE 0101011010 0011</text>
+                  <text x="92" y="404">0110010101010101101010 +3.2R 001010101001 SWEEP</text>
+                  <text x="106" y="430">001010110101001011010010 EDGE 0101101001 REWARD</text>
+                  <text x="124" y="456">010110101001010101001001 NVDA BTC 0101001 TREND</text>
+                  <text x="146" y="482">001010100101101010010110 TAPE 001010101 BTC BTC</text>
+                  <text x="170" y="508">0101010010101101010010 REWARD 01010101 FLOW 011</text>
+                  <text x="194" y="534">001010100101101001010101 FLOW 0010101 LIQUIDITY</text>
+                  <text x="218" y="560">0101010010110100101010010110100101 REACT</text>
+                  <text x="242" y="586">0010101010010110100101010010101 STRUCTURE</text>
+                  <text x="264" y="612">010101001010110101001011001 DISCIPLINE</text>
+                  <text x="286" y="638">0010110100101010010101 +2R +3R</text>
+                  <text x="304" y="664">01010100101010101 BTC</text>
+                </g>
+
+                <path d="M337 72
+                         C425 72 507 118 556 203
+                         C595 271 605 359 591 447
+                         C576 539 537 627 468 688
+                         C430 722 387 741 338 747
+                         C289 741 246 722 208 688
+                         C139 627 100 539 85 447
+                         C71 359 81 271 120 203
+                         C169 118 251 72 337 72Z"
+                      fill="url(#rimLight)" opacity=".9"/>
               </g>
 
-              <g fill="none" stroke="rgba(115,184,255,.14)" stroke-width="1.2">
-                <path d="M180 102c38-46 127-60 175-26 61 43 88 115 84 197-2 48-16 101-48 147-30 43-71 77-123 85-72 11-146-29-179-101-24-54-29-123-10-181 18-54 49-94 101-121z"/>
-                <path d="M225 226c16-12 38-16 57-15 22 1 47 9 63 24"/>
-                <path d="M226 367c22 15 45 20 76 18 25-1 48-9 67-24"/>
+              <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M337 72
+                         C425 72 507 118 556 203
+                         C595 271 605 359 591 447
+                         C576 539 537 627 468 688
+                         C430 722 387 741 338 747
+                         C289 741 246 722 208 688
+                         C139 627 100 539 85 447
+                         C71 359 81 271 120 203
+                         C169 118 251 72 337 72Z"
+                      stroke="rgba(160,220,255,.18)" stroke-width="1.4"/>
+
+                <path d="M209 266
+                         C242 234 282 220 316 226
+                         C336 229 353 239 367 252"
+                      stroke="rgba(124,196,235,.18)" stroke-width="2.2"/>
+
+                <path d="M459 254
+                         C428 229 392 220 358 224
+                         C338 227 321 236 306 248"
+                      stroke="rgba(255,79,207,.28)" stroke-width="2.6"/>
+
+                <path d="M233 316
+                         C255 300 282 295 305 300
+                         C317 303 327 309 334 317"
+                      stroke="rgba(120,184,220,.16)" stroke-width="1.8"/>
+
+                <path d="M430 309
+                         C408 295 382 291 358 296
+                         C346 299 336 305 329 313"
+                      stroke="rgba(232,255,250,.28)" stroke-width="2.2"/>
+
+                <path d="M338 243
+                         C352 292 358 337 357 380
+                         C356 418 347 450 326 469"
+                      stroke="rgba(232,255,250,.30)" stroke-width="2.2"/>
+
+                <path d="M346 252
+                         C360 296 365 340 365 386
+                         C365 430 355 462 336 480"
+                      stroke="rgba(76,242,178,.18)" stroke-width="5.5"/>
+
+                <path d="M270 496
+                         C292 510 317 518 338 518
+                         C360 518 385 510 408 496"
+                      stroke="rgba(235,255,251,.30)" stroke-width="2.3"/>
+
+                <path d="M246 548
+                         C273 578 304 594 338 598
+                         C372 594 403 578 430 548"
+                      stroke="rgba(255,79,207,.28)" stroke-width="2.4"/>
+
+                <path d="M202 586
+                         C235 650 280 685 338 694
+                         C396 685 441 650 474 586"
+                      stroke="rgba(66,224,168,.16)" stroke-width="5.5"/>
+              </g>
+
+              <g>
+                <ellipse cx="271" cy="325" rx="58" ry="28" fill="rgba(8,18,27,.25)"/>
+                <ellipse cx="411" cy="319" rx="56" ry="26" fill="rgba(255,255,255,.05)"/>
+                <ellipse cx="433" cy="310" rx="44" ry="18" fill="rgba(111,248,211,.11)"/>
+                <ellipse cx="465" cy="302" rx="30" ry="12" fill="rgba(255,79,207,.12)"/>
+                <ellipse cx="387" cy="441" rx="78" ry="116" fill="rgba(82,224,179,.08)"/>
+                <ellipse cx="257" cy="448" rx="104" ry="148" fill="rgba(3,8,14,.19)"/>
+                <ellipse cx="337" cy="502" rx="48" ry="18" fill="rgba(82,224,179,.10)"/>
+                <ellipse cx="430" cy="500" rx="54" ry="22" fill="rgba(255,79,207,.08)"/>
               </g>
             </svg>
           </div>
@@ -739,7 +874,7 @@ img,svg{display:block}
 </nav>
 
 <script>
-const STORAGE_KEY='trader-os-v32';
+const STORAGE_KEY='trader-os-v33';
 
 const stateMeta={
   bull:{label:'Bull',marketMode:'Bull',tradeMode:'Aggressive but ruled',badgeClass:'badge-bull',principle:'추세를 따르되, 포지션 크기는 계획을 넘지 않는다.',reminders:['승자를 보유하되 출구 규칙은 먼저 적는다.','수익이 났다고 기준 이하 셋업을 거래하지 않는다.','강세장일수록 저품질 추격 매수를 경계한다.']},
